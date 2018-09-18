@@ -918,9 +918,7 @@ window.WAPI.getProfilePicSmallFromId = function(id, done) {
         } else {
             done(false);
         }
-    }, function(e) {
-		done(false);
-	})
+    })
 };
 
 window.WAPI.getProfilePicFromId = function(id, done) {
@@ -930,9 +928,7 @@ window.WAPI.getProfilePicFromId = function(id, done) {
         } else {
             done(false);
         }
-    }, function(e) {
-		done(false);
-	})
+    })
 };
 
 window.WAPI.downloadFileWithCredentials = function (url, done) {
@@ -1138,9 +1134,8 @@ window.WAPI.getBufferedNewMessages = function(done) {
 /** End new messages observable functions **/
 
 window.WAPI.sendImage = function (imgBase64, chatid, filename, caption, done) {
-	var idUser = new window.Store.UserConstructor(chatid);
-	// create new chat
-	return Store.Chat.find(idUser).then((chat) => {
+    var chat = WAPI.getChat(chatid);
+    if (chat !== undefined) {
         var mediaBlob = window.WAPI.base64ImageToFile(imgBase64, filename);
         var mc = new Store.MediaCollection();
         mc.processFiles([mediaBlob], chat, 1).then(() => {
@@ -1148,7 +1143,11 @@ window.WAPI.sendImage = function (imgBase64, chatid, filename, caption, done) {
             media.sendToChat(chat, {caption: caption});
             if (done !== undefined) done(true);
         });
-    });
+    } else {
+        if (done !== undefined) done(false);
+        return false;
+    }
+    return true;
 };
 
 window.WAPI.base64ImageToFile = function (b64Data, filename) {
