@@ -2,7 +2,6 @@
 /**
  * This script contains WAPI functions that need to be run in the context of the webpage
  */
-
 /**
  * Auto discovery the webpack object references of instances that contains all functions used by the WAPI
  * functions and creates the Store object.
